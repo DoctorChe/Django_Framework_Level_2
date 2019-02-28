@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4IHVzZXJfMTE=?=
+From: django@geekshop.local
+To: duncan1.reg@yandex.ru
+Date: Wed, 27 Feb 2019 14:27:08 -0000
+Message-ID: <155127762897.796.4915546521980024043@sp0120.corp.npospec.ru>
+
+Для подтверждения учетной записи user_11     на портале http://localhost:8000 перейдите по ссылке:     
+http://localhost:8000/auth/verify/duncan1.reg@yandex.ru/0211234e347d8caf75dcc88b6ba7eb7f13fb890b/
+-------------------------------------------------------------------------------

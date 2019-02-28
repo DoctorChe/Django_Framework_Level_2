@@ -1,0 +1,17 @@
+{% load static %}
+<div class="products-header">
+    <ul class="products-menu">
+        {% for category in categories %}
+            <li class="products-menu-list">
+                <a href="#"
+                    class="products-menu-link
+                        {% if category.name == category_name %}
+                            products-menu-link-active
+                        {% endif %}
+                        ">
+                    {{ category.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

@@ -1,0 +1,17 @@
+{% extends 'adminapp/base.html' %}
+{% load staticfiles %}
+
+
+{% block container %}
+    <div class="user_delete">
+{#        Are you sure, if you want to delete <b>{{ product_to_delete.name }}</b>#}
+        Are you sure, if you want to delete <b>{{ object.name }}</b>?
+        <form method="post">
+            {% csrf_token %}
+            <input class="btn btn-danger" type="submit" value="delete">
+        </form>
+
+{#        <a href="{% url 'admin:categories' %}" class="btn btn-success">cancel</a>#}
+        <a href="{% url 'admin:products' object.category.pk %}" class="btn btn-success">cancel</a>
+    </div>
+{% endblock %}

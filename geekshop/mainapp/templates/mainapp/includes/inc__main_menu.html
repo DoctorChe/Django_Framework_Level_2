@@ -1,0 +1,63 @@
+{% load static %}
+{% load my_tags %}
+
+<header class="header">
+    <a class="logo" href="{% url 'main:index' %}"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
+    <nav>
+        <ul class="menu">
+            {% for link in links_menu %}
+                <li class="menu-list">
+                    <a href="{% url link.href %}"
+                        class="menu-link
+                            {% if request.resolver_match.url_name == link.short_href %}
+                                menu-link-active
+                            {% endif %}">
+                        {{ link.name | upper }}
+                    </a>
+                </li>
+            {% endfor %}
+
+            {% if user.is_authenticated %}
+                <li class="menu-list">
+                    <a href="{% url 'auth:edit' %}" class="menu-link">
+                        {{ user.first_name|default:'user' }}
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if user.is_superuser %}
+                <li class="menu-list">
+                    <a href="{% url 'admin:index' %}" class="menu-link">
+                        admin panel
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="menu-list">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'auth:logout' %}" class="menu-link">logout</a>
+                {% else %}
+                    <a href="{% url 'auth:login' %}" class="menu-link">login</a>
+                {% endif %}
+            </li>
+
+            <li class="search">
+                <img src="{% static 'img/search.svg' %}" alt="search">
+            <li class="menu-list">
+            {% if basket %}
+                <a href="{% url 'basket:index' %}" class="menu-link">
+{#                    {{ basket|length }} шт.#}
+{#                    <span>#}
+{#                        Всего {{ basket_total_items }} шт.<br>#}
+{#                        {{ basket_total_price }} р.<br>#}
+{#                    </span>#}
+                    <span>
+{#                        {{ basket.0.total_cost|floatformat:0|local_currency }} ₽#}
+                        {{ basket.0.total_cost|local_currency }}
+                        ({{ basket.0.total_quantity }} items)
+                    </span>
+                </a>
+            {% endif %}
+        </ul>
+    </nav>
+</header>

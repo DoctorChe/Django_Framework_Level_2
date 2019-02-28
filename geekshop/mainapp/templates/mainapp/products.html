@@ -1,0 +1,84 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block container %}
+    <div class="title padding-site">
+
+        {% include 'mainapp/includes/inc__main_menu.html' %}
+
+        <div class="title">
+            <h2 class="title-h2">Our Products Range</h2>
+        </div>
+    </div>
+    <main>
+        <div class="products padding-site">
+
+            {% include 'mainapp/includes/inc__products_menu.html' %}
+            <div class="paginator">
+                {% if products.has_previous %}
+                    <a href="{% url 'main:catalog' category_pk products.previous_page_number %}"><</a>
+                {% endif %}
+                <span class="current">
+                page {{ products.number }} from {{ products.paginator.num_pages }}
+                </span>
+                {% if products.has_next %}
+                    <a href="{% url 'main:catalog' category_pk products.next_page_number %}">></a>
+{#                    <a href="{% url 'main:catalog' category_pk products.last %}">  >></a>#}
+                {% endif %}
+            </div>
+            <div class="trending-items">
+                {% for product in products %}
+                    <a href="{% url 'main:product' product.pk %}" >
+{#                        <img src="/media/{{ product.image|default:'product_images/default.jpg' }}" class="trending-item" alt="{{ product.short_desc }}">#}
+                        <img src="{{ product.image|media_folder_products }}" class="trending-item" alt="{{ product.short_desc }}">
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="sync">
+                <i class="fas fa-sync"></i>
+            </div>
+
+        </div>
+
+        {% if hot_product %}
+            <div class="desc padding-site">
+                <div class="desc-slider">
+                    <a href="{% url 'main:product' hot_product.pk %}">
+                        <img src="/media/{{ hot_product.image|default:'product_images/default.jpg' }}" class="desc-img" alt="slider1">
+                    </a>
+                </div>
+                <div class="desc-textblock">
+                    <h2 class="desc-h2">{{ hot_product.name | title }}</h2>
+                    <h3 class="desc-h3">Hot Deal</h3>
+{#                    <p class="desc-price">₽ <span class="desc-price-number">{{ hot_product.price }}</span>/sq</p>#}
+                    <p class="desc-price"><span class="desc-price-number">{{ hot_product.price|local_currency }}</span>/sq</p>
+                    <p class="desc-text">
+                        {{ hot_product.short_desc | capfirst }}
+                        <br><br>
+                        {{ hot_product.description | capfirst }}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
+{#        <div class="exclusive">#}
+{#            <div class="exclusive-item exclusive-item-1">#}
+{#                <div class="exclusive-text-block">#}
+{#                    <h3 class="exclusive-h3">Exclusive</h3>#}
+{#                    <h2 class="exclusive-h2">Fishnet Chair</h2>#}
+{#                    <p class="exclusive-text">Seat and back with upholstery made of cold cure foam. Steel frame, available in matt powder-coated black or highly polished chrome.</p>#}
+{#                    <a href="#" class="button">Order Us</a>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="exclusive-item exclusive-item-2">#}
+{#                <div class="exclusive-text-block">#}
+{#                    <h3 class="exclusive-h3">Exclusive</h3>#}
+{#                    <h2 class="exclusive-h2">Fishnet Chair</h2>#}
+{#                    <p class="exclusive-text">Seat and back with upholstery made of cold cure foam. Steel frame, available in matt powder-coated black or highly polished chrome.</p>#}
+{#                    <a href="#" class="button">Order Us</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+    </main>
+{% endblock %}

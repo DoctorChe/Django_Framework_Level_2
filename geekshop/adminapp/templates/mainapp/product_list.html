@@ -1,0 +1,64 @@
+{% extends 'adminapp/base.html' %}
+{% load static %}
+{% load my_tags %}
+
+
+{% block container %}
+    <div class="products_list">
+        <a href="{% url 'admin:product_create' category.pk %}" class="new_product products_list-button btn btn-outline-secondary btn-sm">
+            new
+        </a>
+        <div class="paginator">
+            {% if paginator.num_pages > 1 %}
+                {% if page_obj.has_previous %}
+                    <a href="{% url 'admin:products' category.pk page_obj.previous_page_number %}"><</a>
+                {% endif %}
+                <span class="current">
+                page {{ page_obj.number }} from {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{% url 'admin:products' category.pk page_obj.next_page_number %}">></a>
+                {% endif %}
+            {% endif %}
+        </div>
+		{% for object in object_list %}
+			<div class="product_record
+                {% if not object.is_active %}
+                    not_active
+                {% endif %}">
+{#				<img src="/media/{{ object.image|default:'product_images/default.jpg' }}" alt="{{ object.name }}">#}
+				<img src="{{ object.image|media_folder_products }}" alt="{{ object.name }}">
+				<div class="product_name">
+					{{ object.name|title }}
+				</div>
+				<div class="product_actions">
+                    <a href="{% url 'admin:product_read' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                        detailed
+                    </a>
+                    <a href="{% url 'admin:product_update' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                        edit
+                    </a>
+                    {% if object.is_active %}
+                        <a href="{% url 'admin:product_delete' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                            delete
+                        </a>
+                    {% else %}
+                        <a href="{% url 'admin:product_activate' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                            activate
+                        </a>
+                    {% endif %}
+				</div>
+				<div class="summary">
+					<b>price</b>
+{#					<p>{{ object.price }} ₽</p>#}
+					<p>{{ object.price|local_currency }}</p>
+					<b>quantity</b>
+					<p>{{ object.quantity }}</p>
+				</div>
+				<div class="product_desc">
+					{{ object.short_desc|title }}
+				</div>
+			</div>
+		{% endfor%}
+	</div>
+{% endblock %}
