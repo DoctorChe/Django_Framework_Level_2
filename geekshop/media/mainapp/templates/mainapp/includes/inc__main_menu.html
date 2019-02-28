@@ -1,0 +1,23 @@
+{% load static %}
+<header class="header">
+    <a class="logo" href="{% url 'main:index' %}"><img src="{% static 'img/logo.png' %}" alt="logo"></a>
+    <nav>
+        <ul class="menu">
+            {% for link in links_menu %}
+                <li class="menu-list">
+                    <a href="{% url link.href %}"
+                        class="menu-link
+                            {% if request.resolver_match.url_name == link.short_href %}
+                                menu-link-active
+                            {% endif %}">
+                        {{ link.name | upper }}
+                    </a>
+                </li>
+            {% endfor %}
+
+            <li class="search">
+                <img src="{% static 'img/search.svg' %}" alt="search">
+            </li>
+        </ul>
+    </nav>
+</header>

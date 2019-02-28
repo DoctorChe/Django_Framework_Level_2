@@ -1,0 +1,12 @@
+{% extends 'basketapp/base.html' %}
+{% load static %}
+
+{% block container %}
+    <div class="basket_list ">
+        {% include 'basketapp/includes/inc__basket_list.html' %}
+    </div>
+
+    <a href="{% url 'main:index' %}" class="btn btn-outline-secondary btn-sm">
+        home
+    </a>
+{% endblock %}

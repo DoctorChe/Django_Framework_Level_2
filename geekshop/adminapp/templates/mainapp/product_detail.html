@@ -1,0 +1,42 @@
+{% extends 'adminapp/base.html' %}
+{% load static %}
+{% load my_tags %}
+
+
+{% block container %}
+    <div class="products_list">
+{#		<img src="/media/{{ object.image|default:'products_images/default.jpg' }}" alt="{{ object.name }}">#}
+		<img src="{{ object.image|media_folder_products }}" alt="{{ object.name }}">
+		<div class="product_name">
+			{{ object.name|title }}
+		</div>
+		<div class="product_actions">
+            <a href="{% url 'admin:product_update' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                edit
+            </a>
+            {% if object.is_active %}
+                <a href="{% url 'admin:product_delete' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                    delete
+                </a>
+            {% else %}
+                <a href="{% url 'admin:product_activate' object.pk %}" class="products_list-button btn btn-outline-secondary btn-sm">
+                    activate
+                </a>
+            {% endif %}
+		</div>
+		<div class="summary">
+			<b>price</b>
+			<p>{{ object.price|local_currency }}</p>
+			<b>quantity</b>
+			<p>{{ object.quantity }}</p>
+		</div>
+		<div class="product_desc">
+			<b>short description</b>
+			<p>{{ object.short_desc }}</p>
+		</div>
+		<div class="product_desc">
+			<b>description</b>
+			<p>{{ object.description }}</p>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'adminapp/base.html' %}
+{% load static %}
+
+
+{% block container %}
+    <div class="user_delete">
+{#        Are you sure, if you want to activate <b>{{ category_to_activate.name }}</b>#}
+        Are you sure, if you want to activate <b>{{ object.name }}</b>?
+        <form method="post">
+            {% csrf_token %}
+            <input class="btn btn-danger" type="submit" value="activate">
+        </form>
+
+        <a href="{% url 'admin:categories' %}" class="btn btn-success">cancel</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+[
+  {
+      "name": "home",
+      "description": "home furniture"
+  },
+  {
+      "name": "office",
+      "description": "furniture for office"
+  },
+  {
+      "name": "furniture",
+      "description": "furniture accessories"
+  },
+  {
+      "name": "modern",
+      "description": "furniture in modern style"
+  },
+  {
+      "name": "classic",
+      "description": "furniture in classical style"
+  }
+]

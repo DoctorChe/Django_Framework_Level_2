@@ -1,0 +1,46 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block container %}
+
+    {% include 'mainapp/includes/inc__main_menu.html' %}
+
+    <main>
+
+        {% include 'mainapp/includes/inc__products_details_menu.html' %}
+
+        <div class="desc padding-site">
+            <div class="desc-slider">
+                <img src="{% static 'img/slider1.jpg' %}" alt="slider1">
+                <div class="pagination-desc">
+                    <a href="#" class="pagination-desc-link"><img src="{% static 'img/controll.jpg' %}" alt="controll"></a>
+                    <a href="#" class="pagination-desc-link pagination-desc-link-active"><img src="{% static 'img/controll11.jpg' %}" alt="controll11"></a>
+                    <a href="#" class="pagination-desc-link"><img src="{% static 'img/controll2.jpg' %}" alt="controll2"></a>
+                </div>
+            </div>
+            <div class="desc-textblock">
+                <h2 class="desc-h2">Fishnet Chair</h2>
+                <h3 class="desc-h3">Hot Deal</h3>
+                <p class="desc-price">$ <span class="desc-price-number">36.7</span>/sq</p>
+                <a href="#" class="desc-button">Order Us</a>
+                <p class="desc-text">The majesty of Mountains - Ugmonk style.<br><br>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore<br><br>
+et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br><br>
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+            </div>
+        </div>
+        <div class="trending padding-site">
+            <div class="trending-header">
+                <h2 class="trending-h2">Related Products</h2>
+                <a href="#" class="explore">Explore all</a>
+            </div>
+            <div class="trending-items">
+                <a href="#" ><img src="{% static 'img/product-11.jpg' %}" class="trending-item" alt="trending-product-11"></a>
+                <a href="#" ><img src="{% static 'img/product-21.jpg' %}" class="trending-item" alt="trending-product-21"></a>
+                <a href="#" ><img src="{% static 'img/product-31.jpg' %}" class="trending-item" alt="trending-product-31"></a>
+            </div>
+        </div>
+    </main>
+
+
+{% endblock %}

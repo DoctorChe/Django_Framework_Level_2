@@ -1,0 +1,27 @@
+<ul class="menu">
+    <li>
+        <a href="{% url 'main:index' %}" class="menu-link">
+            home
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'admin:index' %}" class="menu-link
+            {% if request.resolver_match.url_name == 'index' %}
+                menu-link-active
+            {% endif %}">
+            users
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'admin:categories' %}"
+        class="menu-link
+            {% if request.resolver_match.url_name == 'categories' or category.name %}
+                menu-link-active
+            {% endif %}">
+            categories
+            {% if category %}
+                :<span>{{ category.name }}</span>
+            {% endif %}
+        </a>
+    </li>
+</ul>
