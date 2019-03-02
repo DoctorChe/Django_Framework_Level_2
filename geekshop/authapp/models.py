@@ -10,6 +10,7 @@ from django.dispatch import receiver
 
 class ShopUser(AbstractUser):
     avatar = models.ImageField(upload_to='users_avatars', blank=True)
+    # age = models.PositiveSmallIntegerField(verbose_name='age')
     age = models.PositiveSmallIntegerField(verbose_name='age', default=18)
     activation_key = models.CharField(verbose_name='activation key', max_length=128, blank=True)
     activation_key_expires = models.DateTimeField(verbose_name='activation key expires',
@@ -35,6 +36,8 @@ class ShopUserProfile(models.Model):
     tagline = models.CharField(verbose_name='tags', max_length=128, blank=True)
     aboutMe = models.TextField(verbose_name='about me', max_length=512, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
+    language = models.CharField(max_length=64, blank=True)
+    site = models.CharField(max_length=128, blank=True)
 
     @receiver(post_save, sender=ShopUser)
     def create_user_profile(sender, instance, created, **kwargs):
