@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from authapp.models import ShopUser
+from .models import ShopUserProfile
 import django.forms as forms
 from PIL import Image
 
@@ -37,10 +38,11 @@ class ShopUserRegisterForm(UserCreationForm):
 
     def clean_avatar(self):
         data = self.cleaned_data['avatar']
-        im = Image.open(data)
-        (width, height) = im.size
-        if width < 120 or height < 120:
-            raise forms.ValidationError("Размер изображения должен быть не менее 120х120 пикселей!")
+        if data:
+            im = Image.open(data)
+            (width, height) = im.size
+            if width < 120 or height < 120:
+                raise forms.ValidationError("Размер изображения должен быть не менее 120х120 пикселей!")
         return data
 
     def save(self):
@@ -75,8 +77,20 @@ class ShopUserEditForm(UserChangeForm):
 
     def clean_avatar(self):
         data = self.cleaned_data['avatar']
-        im = Image.open(data)
-        (width, height) = im.size
-        if width < 120 or height < 120:
-            raise forms.ValidationError("Размер изображения должен быть не менее 120х120 пикселей!")
+        if data:
+            im = Image.open(data)
+            (width, height) = im.size
+            if width < 120 or height < 120:
+                raise forms.ValidationError("Размер изображения должен быть не менее 120х120 пикселей!")
         return data
+
+
+class ShopUserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = ShopUserProfile
+        fields = ('tagline', 'aboutMe', 'gender')
+
+    def __init__(self, *args, **kwargs):
+        super(ShopUserProfileEditForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

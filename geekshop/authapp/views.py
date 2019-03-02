@@ -10,6 +10,9 @@ from django.conf import settings
 
 from authapp.models import ShopUser
 
+from django.db import transaction
+from authapp.forms import ShopUserProfileEditForm
+
 
 def user_login(request):
     next = request.GET['next'] if 'next' in request.GET.keys() else ''
@@ -67,18 +70,27 @@ def user_register(request):
     return render(request, 'authapp/register.html', context)
 
 
+@transaction.atomic
 def user_edit(request):
+    # title = 'редактирование'
+    title = 'edit'
+
     if request.method == 'POST':
         edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
-        if edit_form.is_valid():
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
+        if edit_form.is_valid() and profile_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
         edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfileEditForm(
+            instance=request.user.shopuserprofile
+        )
 
     content = {
-        'page_title': 'edit',
-        'edit_form': edit_form
+        'page_title': title,
+        'edit_form': edit_form,
+        'profile_form': profile_form
     }
 
     return render(request, 'authapp/edit.html', content)
