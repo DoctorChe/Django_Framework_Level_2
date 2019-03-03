@@ -16,18 +16,24 @@ def save_user_profile(backend, user, response, *args, **kwargs):
     api_url = urlunparse(('https',
                           'api.vk.com',
                           '/method/users.get',
+                          # '/method/account.getInfo',
                           None,
-                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'activities', 'personal',
-                                                                 'site')),
+                          urlencode(OrderedDict(fields=','.join(('bdate',
+                                                                 'sex',
+                                                                 # 'about',
+                                                                 'activities',
+                                                                 # 'personal',
+                                                                 # 'lang'
+                                                                 )),
                                                 access_token=response['access_token'],
                                                 v='5.92')),
                           None
                           ))
 
     resp = requests.get(api_url)
+
     if resp.status_code != 200:
         return
-
     data = resp.json()['response'][0]
     if data['sex']:
         user.shopuserprofile.gender = ShopUserProfile.MALE if data['sex'] == 2 else ShopUserProfile.FEMALE
@@ -48,7 +54,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         else:
             user.age = age
 
-    if data['site']:
-        user.shopuserprofile.site = data['site']
+    if data['id']:
+        user.shopuserprofile.vk_page = f"https://vk.com/id{data['id']}"
 
     user.save()

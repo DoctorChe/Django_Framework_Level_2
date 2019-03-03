@@ -37,7 +37,7 @@ class ShopUserProfile(models.Model):
     aboutMe = models.TextField(verbose_name='about me', max_length=512, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
     language = models.CharField(max_length=64, blank=True)
-    site = models.CharField(max_length=128, blank=True)
+    vk_page = models.CharField(verbose_name='VK page', max_length=128, blank=True)
 
     @receiver(post_save, sender=ShopUser)
     def create_user_profile(sender, instance, created, **kwargs):
