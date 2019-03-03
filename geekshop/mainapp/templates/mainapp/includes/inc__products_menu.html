@@ -1,0 +1,31 @@
+{% load static %}
+<div class="products-header">
+    <ul class="products-menu">
+        <li class="products-menu-list">
+            <a href="{% url 'main:catalog' 0 %}"
+                class="products-menu-link
+                {% if request.resolver_match.kwargs.pk == '0' or request.resolver_match.kwargs.pk == None %}
+{#                {% if request.resolver_match.url_name == 'catalog' and request.resolver_match.args.0 == '0' %}#}
+                    products-menu-link-active
+                {% endif %}
+                ">
+                all
+            </a>
+        </li>
+        {% for category in categories %}
+            <li class="products-menu-list">
+                <a href="{% url 'main:catalog' category.pk %}"
+                    class="products-menu-link
+                        {% if request.resolver_match.kwargs.pk|add:'0' == category.pk %}
+{#                        {% if request.resolver_match.url_name == 'catalog' and request.resolver_match.args.0|add:0 == category.pk %}#}
+                            products-menu-link-active
+                        {% endif %}
+                        ">
+                    {{ category.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{#    {{ request.resolver_match.args.0 }} |#}
+{#    {{ request.resolver_match.kwargs.pk }}#}
+</div>

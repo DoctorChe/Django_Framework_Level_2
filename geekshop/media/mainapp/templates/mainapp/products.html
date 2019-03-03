@@ -1,0 +1,48 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block container %}
+    <div class="title padding-site">
+
+        {% include 'mainapp/includes/inc__main_menu.html' %}
+
+        <div class="title">
+            <h2 class="title-h2">Our Products Range</h2>
+        </div>
+    </div>
+    <main>
+        <div class="products padding-site">
+
+            {% include 'mainapp/includes/inc__products_menu.html' %}
+
+            <div class="trending-items">
+                {% for product in products %}
+                    <a href="{% url 'main:product' %}" >
+                        <img src="/media/{{ product.image }}" class="trending-item" alt="{{ product.short_desc }}">
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="sync">
+                <i class="fas fa-sync"></i>
+            </div>
+        </div>
+        <div class="exclusive">
+            <div class="exclusive-item exclusive-item-1">
+                <div class="exclusive-text-block">
+                    <h3 class="exclusive-h3">Exclusive</h3>
+                    <h2 class="exclusive-h2">Fishnet Chair</h2>
+                    <p class="exclusive-text">Seat and back with upholstery made of cold cure foam. Steel frame, available in matt powder-coated black or highly polished chrome.</p>
+                    <a href="#" class="button">Order Us</a>
+                </div>
+            </div>
+            <div class="exclusive-item exclusive-item-2">
+                <div class="exclusive-text-block">
+                    <h3 class="exclusive-h3">Exclusive</h3>
+                    <h2 class="exclusive-h2">Fishnet Chair</h2>
+                    <p class="exclusive-text">Seat and back with upholstery made of cold cure foam. Steel frame, available in matt powder-coated black or highly polished chrome.</p>
+                    <a href="#" class="button">Order Us</a>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

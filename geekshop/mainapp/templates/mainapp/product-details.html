@@ -1,0 +1,71 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block container %}
+
+    {% include 'mainapp/includes/inc__main_menu.html' %}
+
+    <main>
+
+        {% include 'mainapp/includes/inc__products_details_menu.html' %}
+
+        {% if product %}
+            <div class="desc padding-site">
+                <div class="desc-slider">
+{#                    <img src="/media/{{ product.image|default:'product_images/default.jpg' }}" class="desc-img" alt="slider1">#}
+                    <img src="{{ product.image|media_folder_products }}" class="desc-img" alt="slider1">
+                    <div class="pagination-desc">
+                        <a href="#" class="pagination-desc-link">
+{#                            <img src="/media/{{ product.image|default:'product_images/default.jpg' }}" class="pagination-desc-img" alt="controll">#}
+                            <img src="{{ product.image|media_folder_products }}" class="pagination-desc-img" alt="controll">
+                        </a>
+                        <a href="#" class="pagination-desc-link">
+{#                            <img src="/media/{{ product.image|default:'product_images/default.jpg' }}" class="pagination-desc-img pagination-desc-link-active" alt="controll">#}
+                            <img src="{{ product.image|media_folder_products }}" class="pagination-desc-img" alt="controll">
+                        </a>
+                        <a href="#" class="pagination-desc-link">
+{#                            <img src="/media/{{ product.image|default:'product_images/default.jpg' }}" class="pagination-desc-img" alt="controll">#}
+                            <img src="{{ product.image|media_folder_products }}" class="pagination-desc-img" alt="controll">
+                        </a>
+                    </div>
+                </div>
+                <div class="desc-textblock">
+                    <h2 class="desc-h2">{{ product.name | title }}</h2>
+                    <h3 class="desc-h3">Hot Deal</h3>
+{#                    <p class="desc-price">₽ <span class="desc-price-number">{{ product.price }}</span>/sq</p>#}
+                    <p class="desc-price"><span class="desc-price-number">{{ product.price|local_currency }}</span>/sq</p>
+                    <a href="{% url 'basket:add' product.pk %}"
+                        class="desc-button">
+                        Order Us
+                    </a>
+                    <p class="desc-text">
+                        {{ product.short_desc | capfirst }}
+                        <br><br>
+                        {{ product.description | capfirst }}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if same_products %}
+            <div class="trending padding-site">
+                <div class="trending-header">
+                    <h2 class="trending-h2">Related Products</h2>
+                    <a href="{% url 'main:products' %}" class="explore">Explore all</a>
+                </div>
+                <div class="trending-items">
+                    {% for product in same_products %}
+                        <a href="{% url 'main:product' product.pk %}" >
+                            <img src="/media/{{ product.image }}" class="trending-item" alt="{{ product.short_desc }}">
+                        </a>
+                    {% endfor %}
+
+                </div>
+            </div>
+        {% endif %}
+
+    </main>
+
+
+{% endblock %}

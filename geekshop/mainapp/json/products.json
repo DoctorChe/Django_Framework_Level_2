@@ -1,0 +1,83 @@
+[
+  {
+      "category": "home",
+      "name": "chair",
+      "image": "product_images/product-3-sm.jpg",
+      "short_desc": "chair for home",
+      "description": "best chair for office",
+      "price": "100.00",
+      "quantity": 25
+  },
+  {
+      "category": "office",
+      "name": "chair",
+      "image": "product_images/product-21_tZVdJ2c.jpg",
+      "short_desc": "office chair",
+      "description": "best office chair",
+      "price": "150.00",
+      "quantity": 50
+  },
+  {
+      "category": "modern",
+      "name": "chair",
+      "image": "product_images/product-4.jpg",
+      "short_desc": "art nouveau chair",
+      "description": "best art nouveau chair",
+      "price": "250.00",
+      "quantity": 10
+  },
+  {
+      "category": "classic",
+      "name": "chair",
+      "image": "product_images/product-2_FgO302u.jpg",
+      "short_desc": "chair in classical style",
+      "description": "best chair in classical style",
+      "price": "200.00",
+      "quantity": 25
+  },
+  {
+      "category": "home",
+      "name": "table",
+      "image": "product_images/product-11.jpg",
+      "short_desc": "office desk",
+      "description": "best office desk",
+      "price": "350.00",
+      "quantity": 25
+  },
+  {
+      "category": "office",
+      "name": "table",
+      "image": "product_images/product-4-sm_codLjKz.jpg",
+      "short_desc": "table for home",
+      "description": "best table for home",
+      "price": "275.00",
+      "quantity": 20
+  },
+  {
+      "category": "modern",
+      "name": "table",
+      "image": "product_images/product-5.jpg",
+      "short_desc": "art nouveau table",
+      "description": "best art nouveau table",
+      "price": "500.00",
+      "quantity": 5
+  },
+  {
+      "category": "classic",
+      "name": "table",
+      "image": "product_images/product-6.jpg",
+      "short_desc": "table in classical style",
+      "description": "best table in classical style",
+      "price": "400.00",
+      "quantity": 10
+  },
+  {
+      "category": "furniture",
+      "name": "handle",
+      "image": "product_images/product-2-sm.jpg",
+      "short_desc": "handle for the table",
+      "description": "best handle for the table",
+      "price": "10.00",
+      "quantity": 20
+  }
+]

@@ -1,0 +1,37 @@
+{% extends 'mainapp/base.html' %}
+
+{% block container %}
+    <div class="title padding-site">
+
+        {% include 'mainapp/includes/inc__main_menu.html' %}
+
+        <div class="title">
+            <h2 class="title-h2">Contact Us</h2>
+        </div>
+    </div>
+    <main>
+        <div class="contact padding-site">
+            {% if contact_items %}
+                {% for contact_item in contact_items %}
+                    <div class="contact-item">
+                    <div class="contact-text-block">
+                        <div class="marker">
+                            <i class="fas fa-map-marker-alt map-marker"></i>
+                        </div>
+                        <h2 class="contact-h3"><br>Office #{{ forloop.counter }}</h2><br>
+                        <h2 class="contact-h3"><br>{{ contact_item.city }}</h2><br>
+                        <p class="contact-text">Phone:<br>
+                        <span class="contact-text-black">{{ contact_item.phone }}</span><br><br>
+                        Email:<br>
+                        <span class="contact-text-black">{{ contact_item.email }}</span><br><br>
+                        Address:<br>
+                        <span class="contact-text-light">{{ contact_item.address }}</span></p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h2 class="title-h2">Under Construction</h2>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
