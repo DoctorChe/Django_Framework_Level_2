@@ -19,7 +19,7 @@
 
             {% if user.is_authenticated %}
                 <li class="menu-list">
-                    <a href="{% url 'auth:edit' %}" class="menu-link">
+                    <a href="{#% url 'auth:edit' %#}" class="menu-link">
                         {{ user.first_name|default:'user' }}
                     </a>
                 </li>
@@ -36,28 +36,28 @@
                    </a>
                 </li>
 
-                <li>
-                   <div class="dropdown">
-                       <a class="dropdown-toggle" href="" data-toggle="dropdown">
-                           {{ user.first_name|default:'user' }}
-                           <span class="caret"></span>
-                       </a>
-                       <ul class="dropdown-menu">
-                           <li>
-                               <a href="{% url 'auth:edit' %}">
+{#                <li>#}
+{#                   <div class="dropdown">#}
+{#                       <a class="dropdown-toggle" href="" data-toggle="dropdown">#}
+{#                           {{ user.first_name|default:'user' }}#}
+{#                           <span class="caret"></span>#}
+{#                       </a>#}
+{#                       <ul class="dropdown-menu">#}
+{#                           <li>#}
+{#                               <a href="{% url 'auth:edit' %}">#}
 {#                                   профиль#}
-                                   profile
-                               </a>
-                           </li>
-                           <li>
+{#                                   profile#}
+{#                               </a>#}
+{#                           </li>#}
+{#                           <li>#}
 {#                               <a href="{% url 'ordersapp:orders_list' %}">#}
 {#                                   заказы#}
-                                   orders
+{#                                   orders#}
 {#                               </a>#}
-                           </li>
-                       </ul>
-                   </div>
-               </li>
+{#                           </li>#}
+{#                       </ul>#}
+{#                   </div>#}
+{#                </li>#}
             {% endif %}
 
             {% if user.is_superuser %}
