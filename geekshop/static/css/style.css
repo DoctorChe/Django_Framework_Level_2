@@ -68,6 +68,11 @@ body {
     color: #212121;
 }
 
+.dropdown-menu .menu-link:active {
+    /*color: #212121;*/
+    background-color: #9c9c9c;
+}
+
 .search {
     align-items: center;
     display: flex;
