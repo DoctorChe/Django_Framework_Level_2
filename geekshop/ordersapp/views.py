@@ -108,7 +108,8 @@ class OrderRead(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(OrderRead, self).get_context_data(**kwargs)
-        context['page_title'] = 'заказ/просмотр'
+        # context['page_title'] = 'заказ/просмотр'
+        context['page_title'] = 'order/view'
         return context
 
 
