@@ -59,6 +59,21 @@ window.onload = function () {
     //     orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
     // });
 
+    $('.order_form select').change(function () {
+        var target = event.target;
+        orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-price', ''));
+
+        $.ajax({
+            url: "/order/forming/addproduct/" + target.value + "/ajax/",
+            success: function (data) {
+                price_arr[orderitem_num] = getPriceNumber(data.result);
+                $(`tr:eq(${orderitem_num + 1}) .td3`).html(data.result);
+            },
+        });
+
+        event.preventDefault();
+    });
+
     function orderSummaryUpdate(orderitem_price, delta_quantity) {
         delta_cost = orderitem_price * delta_quantity;
 

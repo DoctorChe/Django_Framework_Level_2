@@ -1,4 +1,4 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 
 from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -12,9 +12,13 @@ from django.views.generic.detail import DetailView
 from basketapp.models import Basket
 from ordersapp.models import Order, OrderItem
 from ordersapp.forms import OrderItemForm
+from mainapp.models import Product
+from adminapp.templatetags.my_tags import local_currency
 
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, pre_delete
+
+from django.http import JsonResponse
 
 from django.conf import settings
 
@@ -140,6 +144,13 @@ def order_forming_complete(request, pk):
     order.save()
 
     return HttpResponseRedirect(reverse('ordersapp:orders_list'))
+
+
+def order_forming_add_product(request, pk):
+    if request.is_ajax():
+        product = Product.objects.get(pk=pk)
+
+        return JsonResponse({'result': local_currency(product.price)})
 
 
 @receiver(pre_save, sender=OrderItem)
