@@ -16,6 +16,16 @@ from ordersapp.forms import OrderItemForm
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, pre_delete
 
+from django.conf import settings
+
+LANGUAGE_CODE = settings.LANGUAGE_CODE
+
+
+def get_currency():
+    if LANGUAGE_CODE == "ru-ru":
+        return "₽"
+    return "$"
+
 
 class OrderList(ListView):
     model = Order
@@ -43,11 +53,13 @@ class OrderItemsCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
+                    form.initial['price'] = basket_items[num].product.price
                 basket_items.delete()
             else:
                 formset = OrderFormSet()
 
         data['orderitems'] = formset
+        data['currency'] = get_currency()
         return data
 
     def form_valid(self, form):
@@ -79,8 +91,14 @@ class OrderItemsUpdate(UpdateView):
         if self.request.POST:
             data['orderitems'] = OrderFormSet(self.request.POST, instance=self.object)
         else:
-            data['orderitems'] = OrderFormSet(instance=self.object)
+            # data['orderitems'] = OrderFormSet(instance=self.object)
+            formset = OrderFormSet(instance=self.object)
+            for form in formset.forms:
+                if form.instance.pk:
+                    form.initial['price'] = form.instance.product.price
+            data['orderitems'] = formset
 
+        data['currency'] = get_currency()
         return data
 
     def form_valid(self, form):
