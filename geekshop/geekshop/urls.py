@@ -23,4 +23,5 @@ urlpatterns = [
     re_path(r'^myadmin/', include('adminapp.urls', namespace='admin')),
     # path('admin/', admin.site.urls),
     path('', include('social_django.urls', namespace='social')),
+    re_path(r'^order/', include('ordersapp.urls', namespace='order')),
 ]
