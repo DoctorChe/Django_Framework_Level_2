@@ -28,6 +28,13 @@
             </div>
         {% endfor %}
     </div>
+    {% if object.status == 'FM' %}
+        <button class="btn btn-outline-secondary btn-sm form-control last">
+            <a href="{% url 'ordersapp:order_update' object.pk %}">
+                edit
+            </a>
+        </button>
+    {% endif %}
     {% include 'ordersapp/includes/inc_order_actions.html' %}
 
 {% endblock %}

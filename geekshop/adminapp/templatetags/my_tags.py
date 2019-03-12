@@ -8,6 +8,8 @@ MEDIA_URL = settings.MEDIA_URL
 LANGUAGE_CODE = settings.LANGUAGE_CODE
 # MEDIA_URL = '/media/'
 
+EXCHANGE_RATE = 65.0
+
 
 def media_folder_products(string):
     if not string:
@@ -26,7 +28,7 @@ def media_folder_users(string):
 def local_currency(string):
     if LANGUAGE_CODE == "ru-ru":
         return f"{string}₽" if string and float(string) != 0 else f"0.00₽"
-    return f"${(string / 65):.2f}" if string and float(string) != 0 else f"$0.00"
+    return f"${(float(string) / EXCHANGE_RATE):.2f}" if string and float(string) != 0 else f"$0.00"
 
 
 register.filter("media_folder_products", media_folder_products)

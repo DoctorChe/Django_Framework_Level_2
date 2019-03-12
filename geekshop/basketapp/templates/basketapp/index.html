@@ -6,7 +6,15 @@
         {% include 'basketapp/includes/inc__basket_list.html' %}
     </div>
 
-    <a href="{% url 'main:index' %}" class="btn btn-outline-secondary btn-sm">
+    {% if basket %}
+        <a href="{% url 'ordersapp:order_create' %}" class="btn btn-outline-secondary">
+            make order
+        </a>
+    {% else %}
+        <p>Basket is empty.</p>
+    {% endif %}
+
+    <a href="{% url 'main:index' %}" class="btn btn-outline-secondary">
         home
     </a>
 {% endblock %}
