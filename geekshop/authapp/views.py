@@ -13,6 +13,8 @@ from authapp.models import ShopUser
 from django.db import transaction
 from authapp.forms import ShopUserProfileEditForm
 
+from django.contrib.auth.decorators import login_required
+
 
 def user_login(request):
     next = request.GET['next'] if 'next' in request.GET.keys() else ''
@@ -70,6 +72,7 @@ def user_register(request):
     return render(request, 'authapp/register.html', context)
 
 
+@login_required
 @transaction.atomic
 def user_edit(request):
     # title = 'редактирование'

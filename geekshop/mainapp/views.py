@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 import json
 import random
+import os.path
 from mainapp.models import ProductCategory, Product
 
 links_menu = [
@@ -14,7 +15,13 @@ links_menu = [
     {'href': 'main:contacts', 'short_href': 'contacts', 'name': 'contact'},
 ]
 
-JSON_CONTACTS = "mainapp/json/contact_items.json"
+# JSON_CONTACTS = "mainapp/json/contact_items.json"
+JSON_PATH = "mainapp/json/"
+
+
+def load_from_json(file_name):
+    with open(os.path.join(JSON_PATH, file_name + '.json'), 'r', errors='ignore') as infile:
+        return json.load(infile)
 
 
 def get_basket(user):
@@ -105,8 +112,10 @@ def product(request, pk=None):
 
 
 def contacts(request):
-    with open(JSON_CONTACTS, 'r', encoding='utf-8') as tmp_file:
-        contact_items = json.load(tmp_file)
+    # with open(JSON_CONTACTS, 'r', encoding='utf-8') as tmp_file:
+    #     contact_items = json.load(tmp_file)
+
+    contact_items = load_from_json('contact_items')
 
     context = {
         'page_title': 'contact us',
