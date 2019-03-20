@@ -27,8 +27,13 @@ SECRET_KEY = '*ax*z(@7s87qa-f#f(lj37p&*r4t+r&+l!1za#3$f30l4il=4x'
 DEBUG = True
 # DEBUG = False
 
-# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# ALLOWED_HOSTS = [*]
+
+# if DEBUG:
+#     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# else:
+#     ALLOWED_HOSTS = [*]
 
 
 # Application definition
@@ -94,6 +99,33 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'NAME': 'geekshop',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'USER': 'django',
+#         'PASSWORD': 'geekbrains',
+#         'HOST': 'localhost'
+#     }
+# }
+
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'NAME': 'geekshop',
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'USER': 'django',
+#             'PASSWORD': 'geekbrains',
+#             'HOST': 'localhost'
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -190,3 +222,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
+# try:
+#     from .production_settings import *
+# except ImportError:
+#     pass

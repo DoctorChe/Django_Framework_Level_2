@@ -148,9 +148,15 @@ def order_forming_complete(request, pk):
 
 def order_forming_add_product(request, pk):
     if request.is_ajax():
-        product = Product.objects.get(pk=pk)
+        # product = Product.objects.get(pk=pk)
+        product = Product.objects.filter(pk=int(pk)).first()
 
-        return JsonResponse({'result': local_currency(product.price)})
+        if product:
+            return JsonResponse({'price': local_currency(product.price)})
+            # return JsonResponse({'price': product.price})
+        else:
+            return JsonResponse({'price': local_currency(0)})
+            # return JsonResponse({'price': 0})
 
 
 @receiver(pre_save, sender=OrderItem)
