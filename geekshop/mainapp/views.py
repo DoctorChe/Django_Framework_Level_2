@@ -42,6 +42,7 @@ def today():
 def index(request):
 
     trending_products = Product.objects.filter(is_active=True)[:6]
+    # trending_products = Product.objects.filter(is_active=True, category__is_active=True)[:6]
 
     context = {
         'page_title': 'home',
