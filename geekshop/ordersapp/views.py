@@ -20,6 +20,9 @@ from django.db.models.signals import pre_save, pre_delete
 
 from django.http import JsonResponse
 
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 from django.conf import settings
 
 LANGUAGE_CODE = settings.LANGUAGE_CODE
@@ -36,6 +39,10 @@ class OrderList(ListView):
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(ListView, self).dispatch(*args, **kwargs)
 
 
 class OrderItemsCreate(CreateView):
@@ -83,6 +90,10 @@ class OrderItemsCreate(CreateView):
 
         return super(OrderItemsCreate, self).form_valid(form)
 
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(CreateView, self).dispatch(*args, **kwargs)
+
 
 class OrderItemsUpdate(UpdateView):
     model = Order
@@ -122,10 +133,18 @@ class OrderItemsUpdate(UpdateView):
 
         return super(OrderItemsUpdate, self).form_valid(form)
 
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateView, self).dispatch(*args, **kwargs)
+
 
 class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('ordersapp:orders_list')
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteView, self).dispatch(*args, **kwargs)
 
 
 class OrderRead(DetailView):
@@ -136,6 +155,10 @@ class OrderRead(DetailView):
         # context['page_title'] = 'заказ/просмотр'
         context['page_title'] = 'order/view'
         return context
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(DetailView, self).dispatch(*args, **kwargs)
 
 
 def order_forming_complete(request, pk):

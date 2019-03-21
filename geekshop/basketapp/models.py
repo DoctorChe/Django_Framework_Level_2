@@ -2,6 +2,8 @@ from django.db import models
 from authapp.models import ShopUser
 from mainapp.models import Product
 
+from django.utils.functional import cached_property
+
 
 # class BasketQuerySet(models.QuerySet):
 #
@@ -26,6 +28,11 @@ class Basket(models.Model):
     add_datetime = models.DateTimeField(verbose_name='время добавления',
                                         auto_now_add=True)
 
+    @cached_property
+    def get_items_cached(self):
+        # return self.user.basket.select_related()
+        return self.user.basket_set.select_related()
+
     @property
     def product_cost(self):
         """return cost of all products this type"""
@@ -35,7 +42,8 @@ class Basket(models.Model):
     def total_quantity(self):
         """return total quantity for user"""
         # _items = Basket.objects.filter(user=self.user)
-        _items = self.user.basket_set.all()
+        # _items = self.user.basket_set.all()
+        _items = self.get_items_cached
         _totalquantity = sum(list(map(lambda x: x.quantity, _items)))
         return _totalquantity
 
@@ -43,7 +51,8 @@ class Basket(models.Model):
     def total_cost(self):
         """return total cost for user"""
         # _items = Basket.objects.filter(user=self.user)
-        _items = self.user.basket_set.all()
+        # _items = self.user.basket_set.all()
+        _items = self.get_items_cached
         _totalcost = sum(list(map(lambda x: x.product_cost, _items)))
         return _totalcost
 

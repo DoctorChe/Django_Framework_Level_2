@@ -4,7 +4,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 import json
 import random
+import os.path
 from mainapp.models import ProductCategory, Product
+
+from django.conf import settings
+from django.core.cache import cache
+
+from django.views.decorators.cache import cache_page
 
 links_menu = [
     {'href': 'main:index', 'short_href': 'index', 'name': 'home'},
@@ -14,7 +20,13 @@ links_menu = [
     {'href': 'main:contacts', 'short_href': 'contacts', 'name': 'contact'},
 ]
 
-JSON_CONTACTS = "mainapp/json/contact_items.json"
+# JSON_CONTACTS = "mainapp/json/contact_items.json"
+JSON_PATH = "mainapp/json/"
+
+
+def load_from_json(file_name):
+    with open(os.path.join(JSON_PATH, file_name + '.json'), 'r', errors='ignore') as infile:
+        return json.load(infile)
 
 
 def get_basket(user):
@@ -31,7 +43,7 @@ def get_hot_product():
 
 def get_same_products(hot_product):
     same_products = Product.objects.filter(category=hot_product.category, is_active=True). \
-        exclude(pk=hot_product.pk)[:3]
+                        exclude(pk=hot_product.pk)[:3]
     return same_products
 
 
@@ -40,8 +52,9 @@ def today():
 
 
 def index(request):
-
-    trending_products = Product.objects.filter(is_active=True)[:6]
+    # trending_products = Product.objects.filter(is_active=True)[:6]
+    trending_products = get_products()[:6]
+    # trending_products = Product.objects.filter(is_active=True, category__is_active=True)[:6]
 
     context = {
         'page_title': 'home',
@@ -53,17 +66,21 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
+@cache_page(3600)
 def products(request, pk=None, page=1):
     categories = ProductCategory.objects.filter(is_active=True)
     hot_product = get_hot_product()
 
     if pk:
         if pk == '0':
-            products = Product.objects.filter(is_active=True).order_by('price')
+            # products = Product.objects.filter(is_active=True).order_by('price')
+            products = get_products_orederd_by_price()
         else:
-            products = Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+            # products = Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+            products = get_products_in_category_orederd_by_price(pk)
     else:
-        products = Product.objects.filter(is_active=True).order_by('price')
+        # products = Product.objects.filter(is_active=True).order_by('price')
+        products = get_products_orederd_by_price()
 
     products_paginator = Paginator(products, 2)
     try:
@@ -72,6 +89,8 @@ def products(request, pk=None, page=1):
         products = products_paginator.get_page(1)
     except EmptyPage:
         products = products_paginator.get_page(products_paginator.num_pages)
+
+    # links_menu = get_links_menu()
 
     context = {
         'page_title': 'our products range',
@@ -88,7 +107,8 @@ def products(request, pk=None, page=1):
 
 def product(request, pk=None):
     categories = ProductCategory.objects.filter(is_active=True)
-    product = get_object_or_404(Product, pk=pk)
+    # product = get_object_or_404(Product, pk=pk)
+    product = get_product(pk)
     same_products = get_same_products(product)
 
     context = {
@@ -104,8 +124,21 @@ def product(request, pk=None):
 
 
 def contacts(request):
-    with open(JSON_CONTACTS, 'r', encoding='utf-8') as tmp_file:
-        contact_items = json.load(tmp_file)
+    # with open(JSON_CONTACTS, 'r', encoding='utf-8') as tmp_file:
+    #     contact_items = json.load(tmp_file)
+
+    # contact_items = load_from_json('contact_items')
+
+    if settings.LOW_CACHE:
+        key = f'contact_items'
+        contact_items = cache.get(key)
+        if contact_items is None:
+            # contact_items = load_from_json('contacts__contact_items')
+            contact_items = load_from_json('contact_items')
+            cache.set(key, contact_items)
+    else:
+        # contact_items = load_from_json('contacts__contact_items')
+        contact_items = load_from_json('contact_items')
 
     context = {
         'page_title': 'contact us',
@@ -115,3 +148,75 @@ def contacts(request):
         # 'basket': get_basket(request.user),
     }
     return render(request, 'mainapp/contact.html', context)
+
+
+# def get_links_menu():
+#     if settings.LOW_CACHE:
+#         key = 'links_menu'
+#         links_menu = cache.get(key)
+#         if links_menu is None:
+#             links_menu = ProductCategory.objects.filter(is_active=True)
+#             cache.set(key, links_menu)
+#         return links_menu
+#     else:
+#         return ProductCategory.objects.filter(is_active=True)
+
+
+def get_category(pk):
+    if settings.LOW_CACHE:
+        key = f'category_{pk}'
+        category = cache.get(key)
+        if category is None:
+            category = get_object_or_404(ProductCategory, pk=pk)
+            cache.set(key, category)
+        return category
+    else:
+        return get_object_or_404(ProductCategory, pk=pk)
+
+
+def get_products():
+    if settings.LOW_CACHE:
+        key = 'products'
+        products = cache.get(key)
+        if products is None:
+            products = Product.objects.filter(is_active=True, category__is_active=True).select_related('category')
+            cache.set(key, products)
+        return products
+    else:
+        return Product.objects.filter(is_active=True, category__is_active=True).select_related('category')
+
+
+def get_product(pk):
+    if settings.LOW_CACHE:
+        key = f'product_{pk}'
+        product = cache.get(key)
+        if product is None:
+            product = get_object_or_404(Product, pk=pk)
+            cache.set(key, product)
+        return product
+    else:
+        return get_object_or_404(Product, pk=pk)
+
+
+def get_products_orederd_by_price():
+    if settings.LOW_CACHE:
+        key = 'products_orederd_by_price'
+        products = cache.get(key)
+        if products is None:
+            products = Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
+            cache.set(key, products)
+        return products
+    else:
+        return Product.objects.filter(is_active=True, category__is_active=True).order_by('price')
+
+
+def get_products_in_category_orederd_by_price(pk):
+    if settings.LOW_CACHE:
+        key = f'products_in_category_orederd_by_price_{pk}'
+        products = cache.get(key)
+        if products is None:
+            products = Product.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by('price')
+            cache.set(key, products)
+        return products
+    else:
+        return Product.objects.filter(category__pk=pk, is_active=True, category__is_active=True).order_by('price')
