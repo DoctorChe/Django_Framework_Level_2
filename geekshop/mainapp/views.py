@@ -10,6 +10,8 @@ from mainapp.models import ProductCategory, Product
 from django.conf import settings
 from django.core.cache import cache
 
+from django.views.decorators.cache import cache_page
+
 links_menu = [
     {'href': 'main:index', 'short_href': 'index', 'name': 'home'},
     {'href': 'main:products', 'short_href': 'products', 'name': 'products'},
@@ -64,6 +66,7 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
+@cache_page(3600)
 def products(request, pk=None, page=1):
     categories = ProductCategory.objects.filter(is_active=True)
     hot_product = get_hot_product()
