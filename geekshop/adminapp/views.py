@@ -4,7 +4,8 @@ from django.urls import reverse
 from authapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
 
-from adminapp.forms import AdminShopUserRegisterForm, AdminShopUserChangeForm, AdminProductCategoryEditForm, AdminProductEditForm
+from adminapp.forms import AdminShopUserRegisterForm, AdminShopUserChangeForm, AdminProductCategoryEditForm, \
+    AdminProductEditForm
 
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -13,6 +14,10 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
+
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from django.db import connection
 
 
 # @user_passes_test(lambda x: x.is_superuser)
@@ -29,6 +34,7 @@ from django.urls import reverse_lazy
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')
 class UsersListView(ListView):
     model = ShopUser
+
     # paginate_by = 2
     # template_name = 'adminapp/users.html'
 
@@ -65,6 +71,7 @@ class AdminShopUserCreateView(CreateView):
     model = ShopUser
     success_url = reverse_lazy('admin:index')
     form_class = AdminShopUserRegisterForm
+
     # template_name = 'adminapp/user_update.html'
     # fields = ('__all__')
 
@@ -72,6 +79,7 @@ class AdminShopUserCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'users/create'
         return context
+
 
 # def user_update(request, pk):
 #     edit_user = get_object_or_404(ShopUser, pk=pk)
@@ -104,6 +112,7 @@ class AdminShopUserUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'users/edit'
         return context
+
 
 # def user_delete(request, pk):
 #     user = get_object_or_404(ShopUser, pk=pk)
@@ -220,6 +229,7 @@ class ProductCategoryCreateView(CreateView):
     model = ProductCategory
     success_url = reverse_lazy('admin:categories')
     form_class = AdminProductCategoryEditForm
+
     # template_name = 'adminapp/category_update.html'
     # fields = ('__all__')
 
@@ -227,6 +237,7 @@ class ProductCategoryCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'categories/create'
         return context
+
 
 # def category_update(request, pk):
 #     edit_obj = get_object_or_404(ProductCategory, pk=pk)
@@ -259,6 +270,7 @@ class ProductCategoryUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'categories/edit'
         return context
+
 
 # def category_delete(request, pk):
 #     item = get_object_or_404(ProductCategory, pk=pk)
@@ -295,6 +307,7 @@ class ProductCategoryDeleteView(DeleteView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'categories/delete'
         return context
+
 
 # def category_activate(request, pk):
 #     item = get_object_or_404(ProductCategory, pk=pk)
@@ -533,3 +546,20 @@ class ProductActivateView(DeleteView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'product/activate'
         return context
+
+
+def db_profile_by_type(prefix, type, queries):
+    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    print(f'db_profile {type} for {prefix}:')
+    [print(query['sql']) for query in update_queries]
+
+
+@receiver(pre_save, sender=ProductCategory)
+def product_is_active_update_productcategory_save(sender, instance, **kwargs):
+    if instance.pk:
+        if instance.is_active:
+            instance.product_set.update(is_active=True)
+        else:
+            instance.product_set.update(is_active=False)
+
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
