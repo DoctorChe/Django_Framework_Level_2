@@ -19,6 +19,8 @@ from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.db import connection
 
+from django.db.models import F
+
 
 # @user_passes_test(lambda x: x.is_superuser)
 # def index(request):
@@ -270,6 +272,15 @@ class ProductCategoryUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'categories/edit'
         return context
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+                db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+
+        return super().form_valid(form)
 
 
 # def category_delete(request, pk):
