@@ -61,6 +61,18 @@ class Basket(models.Model):
         return Basket.objects.filter(user=user).order_by('product__category')
 
     @staticmethod
+    def get_product(user, product):
+        return Basket.objects.filter(user=user, product=product)
+
+    @classmethod
+    def get_products_quantity(cls, user):
+        basket_items = cls.get_items(user)
+        basket_items_dic = {}
+        [basket_items_dic.update({item.product: item.quantity}) for item in basket_items]
+
+        return basket_items_dic
+
+    @staticmethod
     def get_item(pk):
         return Basket.objects.filter(pk=pk).first()
 

@@ -7,6 +7,9 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.urls import reverse
 
+from django.db.models import F
+# from django.db import connection
+
 
 @login_required
 def index(request):
@@ -25,13 +28,23 @@ def basket_add(request, pk):
                                                 'pk': pk,
                                             }))
     product = get_object_or_404(Product, pk=pk)
-    basket_item = Basket.objects.filter(product=product, user=request.user).first()
-    if basket_item:
-        basket_item.quantity += 1
-        basket_item.save()
+
+    # basket_item = Basket.objects.filter(product=product, user=request.user).first()
+    old_basket_item = Basket.get_product(user=request.user, product=product)
+
+    # if basket_item:
+    #     basket_item.quantity += 1
+    #     basket_item.save()
+    if old_basket_item:
+        # old_basket_item[0].quantity += 1
+        old_basket_item[0].quantity = F('quantity') + 1
+        old_basket_item[0].save()
         print(f'обновлен объект корзины')
     else:
-        Basket.objects.create(product=product, user=request.user, quantity=1)
+        # Basket.objects.create(product=product, user=request.user, quantity=1)
+        new_basket_item = Basket(user=request.user, product=product)
+        new_basket_item.quantity += 1
+        new_basket_item.save()
         print(f'создан новый объект корзины')
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
