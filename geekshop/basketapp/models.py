@@ -2,6 +2,8 @@ from django.db import models
 from authapp.models import ShopUser
 from mainapp.models import Product
 
+from django.utils.functional import cached_property
+
 
 # class BasketQuerySet(models.QuerySet):
 #
@@ -26,6 +28,11 @@ class Basket(models.Model):
     add_datetime = models.DateTimeField(verbose_name='время добавления',
                                         auto_now_add=True)
 
+    @cached_property
+    def get_items_cached(self):
+        # return self.user.basket.select_related()
+        return self.user.basket_set.select_related()
+
     @property
     def product_cost(self):
         """return cost of all products this type"""
@@ -35,7 +42,8 @@ class Basket(models.Model):
     def total_quantity(self):
         """return total quantity for user"""
         # _items = Basket.objects.filter(user=self.user)
-        _items = self.user.basket_set.all()
+        # _items = self.user.basket_set.all()
+        _items = self.get_items_cached
         _totalquantity = sum(list(map(lambda x: x.quantity, _items)))
         return _totalquantity
 
@@ -43,13 +51,26 @@ class Basket(models.Model):
     def total_cost(self):
         """return total cost for user"""
         # _items = Basket.objects.filter(user=self.user)
-        _items = self.user.basket_set.all()
+        # _items = self.user.basket_set.all()
+        _items = self.get_items_cached
         _totalcost = sum(list(map(lambda x: x.product_cost, _items)))
         return _totalcost
 
     @staticmethod
     def get_items(user):
         return Basket.objects.filter(user=user).order_by('product__category')
+
+    @staticmethod
+    def get_product(user, product):
+        return Basket.objects.filter(user=user, product=product)
+
+    @classmethod
+    def get_products_quantity(cls, user):
+        basket_items = cls.get_items(user)
+        basket_items_dic = {}
+        [basket_items_dic.update({item.product: item.quantity}) for item in basket_items]
+
+        return basket_items_dic
 
     @staticmethod
     def get_item(pk):
